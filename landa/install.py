@@ -2,7 +2,8 @@ import frappe
 from frappe import get_hooks
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
-
+from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+from frappe import _
 
 def after_install():
 	update_system_settings()
@@ -12,6 +13,7 @@ def after_install():
 	disable_modes_of_payment()
 	add_session_defaults()
 	setup_uoms()
+	create_organization_print_custom_field()
 
 
 def create_records_from_hooks():
@@ -107,3 +109,15 @@ def make_property_setters():
 			for property_setter in property_setters:
 				for_doctype = True if not property_setter[0] else False
 				make_property_setter(doctype, *property_setter, for_doctype)
+
+def create_organization_print_custom_field():
+	create_custom_field(
+		"Print Settings",
+		{
+			"label": _("Organization in Address"),
+			"fieldname": "organization_in_address",
+			"fieldtype": "Check",
+			"default": 1,
+			"insert_after": "compact_item_print",
+		},
+	)
