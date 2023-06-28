@@ -16,11 +16,14 @@ def validate(doc: User, event=None):
 	doc.append_roles("LANDA Member")
 
 	if doc.landa_member:
-		existing_user = frappe.db.exists(
+		if existing_user := frappe.db.exists(
 			"User",
-			{"landa_member": doc.landa_member, "name": ("!=", doc.name), "enabled": 1},
-		)
-		if existing_user:
+			{
+				"landa_member": doc.landa_member,
+				"name": ("!=", doc.name),
+				"enabled": 1,
+			},
+		):
 			frappe.throw(
 				_("User {0} is already linked to LANDA Member {1}").format(existing_user, doc.landa_member)
 			)

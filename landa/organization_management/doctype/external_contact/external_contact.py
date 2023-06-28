@@ -24,7 +24,7 @@ class ExternalContact(Document):
 		if self.name:
 			return
 
-		self.name = make_autoname("EXT-" + self.organization + "-.####", "External Contact")
+		self.name = make_autoname(f"EXT-{self.organization}-.####", "External Contact")
 
 	def validate(self):
 		self.full_name = get_full_name(self.first_name, self.last_name)
@@ -40,6 +40,6 @@ class ExternalContact(Document):
 		"""Decrease the naming counter when the newest external contact gets deleted."""
 		# reconstruct the key used to generate the name
 		number_part_len = len(self.name.split("-")[-1])
-		key = self.name[:-number_part_len] + "." + "#" * number_part_len
+		key = f"{self.name[:-number_part_len]}." + "#" * number_part_len
 
 		revert_series_if_last(key, self.name)

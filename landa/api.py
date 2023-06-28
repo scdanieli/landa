@@ -26,8 +26,7 @@ def organization(id: str = None) -> List[Dict]:
 	)
 
 	for organization in organizations:
-		public_contact = organization.pop("public_contact")
-		if public_contact:
+		if public_contact := organization.pop("public_contact"):
 			organization["contact"] = frappe.db.get_value(
 				"Contact",
 				public_contact,
@@ -43,8 +42,7 @@ def organization(id: str = None) -> List[Dict]:
 				as_dict=True,
 			)
 
-		public_address = organization.pop("public_address")
-		if public_address:
+		if public_address := organization.pop("public_address"):
 			organization["address"] = frappe.db.get_value(
 				"Address",
 				public_address,
@@ -52,12 +50,10 @@ def organization(id: str = None) -> List[Dict]:
 				as_dict=True,
 			)
 
-		location = organization.pop("location")
-		if location:
+		if location := organization.pop("location"):
 			organization["geojson"] = json.loads(location)
 
-		fishing_area = organization.pop("fishing_area")
-		if fishing_area:
+		if fishing_area := organization.pop("fishing_area"):
 			organization["fishing_area"] = frappe.db.get_value(
 				"Fishing Area",
 				fishing_area,

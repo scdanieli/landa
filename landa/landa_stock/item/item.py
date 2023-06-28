@@ -10,8 +10,11 @@ def before_insert(item, event):
 def set_year_of_validity(item):
 	"""Set "Valid From Year" and "Valid To Year" to year_of_validity from Attribute Value."""
 	if item.variant_of and item.attributes:
-		years = [row.attribute_value for row in item.attributes if row.attribute == "Gültigkeitsjahr"]
-		if years:
+		if years := [
+			row.attribute_value
+			for row in item.attributes
+			if row.attribute == "Gültigkeitsjahr"
+		]:
 			year = years[0]
 			item.valid_from_year = year
 			item.valid_to_year = year

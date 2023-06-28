@@ -114,8 +114,8 @@ class Address:
 		permits_df.drop("docstatus", axis=1, inplace=True)
 		permits_df = remove_duplicate_indices(permits_df, sort_by="year")
 
-		this_year = int(datetime.today().strftime("%Y"))
-		this_month = int(datetime.today().strftime("%m"))
+		this_year = int(datetime.now().strftime("%Y"))
+		this_month = int(datetime.now().strftime("%m"))
 		# if this month is January to June: members need a permit for this year or last year:
 		if this_month < 7:
 			permits_df["permit_active"] = [

@@ -191,8 +191,7 @@ def get_data(filters=None):
 
 
 def execute(filters=None):
-	regional_organization = get_current_member_data().regional_organization
-	if regional_organization:
+	if regional_organization := get_current_member_data().regional_organization:
 		filters["regional_organization"] = regional_organization
 
 	return COLUMNS, get_data(filters)

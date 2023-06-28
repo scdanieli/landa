@@ -130,21 +130,18 @@ COLUMNS = [
 def get_data(filters):
 	filters["status"] = "Completed"
 	or_filters = {}
-	member_data = get_current_member_data()
-	if member_data:
+	if member_data := get_current_member_data():
 		or_filters["water_body"] = (
 			"in",
 			get_supported_water_bodies(member_data.local_organization),
 		)
 
-	data = frappe.get_all(
+	return frappe.get_all(
 		"Stocking Measure",
 		fields=[column.get("fieldname") for column in COLUMNS],
 		filters=filters,
 		or_filters=or_filters,
 	)
-
-	return data
 
 
 def execute(filters=None):

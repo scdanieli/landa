@@ -33,17 +33,13 @@ class MemberFunctionCategory(Document):
 		return list(set(member_names))
 
 	def get_removed_roles(self):
-		doc_before_save = self.get_doc_before_save()
-
-		if doc_before_save:
+		if doc_before_save := self.get_doc_before_save():
 			return list({role.role for role in doc_before_save.roles} - {role.role for role in self.roles})
 		else:
 			return []
 
 	def get_new_roles(self):
-		doc_before_save = self.get_doc_before_save()
-
-		if doc_before_save:
+		if doc_before_save := self.get_doc_before_save():
 			return list({role.role for role in self.roles} - {role.role for role in doc_before_save.roles})
 		else:
 			return self.get_roles()
@@ -92,8 +88,7 @@ def update_organization_restrictions(member_names):
 
 def add_roles_to_member(member_name, roles):
 	"""Add a list of roles to a specific member."""
-	user = get_user(member_name)
-	if user:
+	if user := get_user(member_name):
 		user.flags.ignore_permissions = 1
 		user.add_roles(*roles)
 
@@ -220,8 +215,7 @@ def get_values_from_categories(
 
 def get_user(member_name: str):
 	"""Return the user object that belongs to this member."""
-	user_name = get_user_name(member_name)
-	if user_name:
+	if user_name := get_user_name(member_name):
 		return frappe.get_doc("User", user_name)
 	else:
 		return None

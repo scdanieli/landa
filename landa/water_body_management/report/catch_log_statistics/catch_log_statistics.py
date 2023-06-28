@@ -181,9 +181,9 @@ def add_or_filters(query, entry):
 			| entry.organization.like(f"{member_data.regional_organization}-%")
 		)
 
-	# User is not in regional organization management
-	supported_water_bodies = get_supported_water_bodies(member_data.local_organization)
-	if supported_water_bodies:
+	if supported_water_bodies := get_supported_water_bodies(
+		member_data.local_organization
+	):
 		return query.where(
 			entry.organization.like(f"{member_data.local_organization}%")
 			| entry.water_body.isin(supported_water_bodies)

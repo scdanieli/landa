@@ -36,8 +36,7 @@ def execute():
 		if website and not doc.website:
 			doc.website = website
 
-		leaflet = record.get("leaflet")
-		if leaflet:
+		if leaflet := record.get("leaflet"):
 			doc.location = get_geojson(leaflet.get("lat"), leaflet.get("lng"))
 
 		doc.save()

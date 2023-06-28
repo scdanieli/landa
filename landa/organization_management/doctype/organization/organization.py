@@ -36,10 +36,10 @@ class Organization(NestedSet):
 			frappe.throw(_("Please set a Parent Organization."))
 		elif self.is_level(2):
 			# Local Organizations
-			self.name = make_autoname(self.parent_organization + "-.###", "Organization")
+			self.name = make_autoname(f"{self.parent_organization}-.###", "Organization")
 		elif self.is_level(3):
 			# Chapters
-			self.name = make_autoname(self.parent_organization + "-.##", "Organization")
+			self.name = make_autoname(f"{self.parent_organization}-.##", "Organization")
 		else:
 			frappe.throw(_("Cannot set Parent Organization to a local group."))
 
@@ -75,15 +75,18 @@ class Organization(NestedSet):
 	@frappe.whitelist()
 	def get_series_current(self):
 		frappe.only_for("System Manager")
-		return frappe.db.get_value("Series", self.name + "-", "current", order_by="name") or 0
+		return (
+			frappe.db.get_value("Series", f"{self.name}-", "current", order_by="name")
+			or 0
+		)
 
 	@frappe.whitelist()
 	def set_series_current(self, current):
 		frappe.only_for("System Manager")
-		series = self.name + "-"
+		series = f"{self.name}-"
 
 		# insert series if missing
-		if frappe.db.get_value("Series", series, "name", order_by="name") == None:
+		if frappe.db.get_value("Series", series, "name", order_by="name") is None:
 			frappe.db.sql("insert into tabSeries (name, current) values (%s, 0)", (series))
 
 		frappe.db.sql("UPDATE `tabSeries` SET current = %s WHERE name = %s", (cint(current), series))
@@ -95,7 +98,7 @@ class Organization(NestedSet):
 
 		# reconstruct the key used to generate the name
 		number_part_len = len(self.name.split("-")[-1])
-		key = self.name[:-number_part_len] + "." + "#" * number_part_len
+		key = f"{self.name[:-number_part_len]}." + "#" * number_part_len
 
 		revert_series_if_last(key, self.name)
 
